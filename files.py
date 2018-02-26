@@ -35,3 +35,9 @@ def borrarFile(file, ruta):
     fd = os.system('rm '+ruta+' '+file)
     if fd ==n
     print file, ' : borrado'
+
+
+def solicitarFile(arch,con):
+    con.send('f')
+    con.send(arch)
+    recibirFile(arch,con)
