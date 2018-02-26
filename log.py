@@ -1,5 +1,3 @@
-import datetime
-
 def creaLog(listaIP,listaArchivos):
     with open('log.txt','w') as archivoLog:
 
@@ -42,18 +40,20 @@ def leerLog(archivoLog):
     return ipList,fileList
 
 
-def creaLogRevision(logA,logR):
+def actualizaLogRevision(logA,logR,miip):
     ipA,fileListA=leerLog(logA)
     ipR,fileListR=leerLog(logR)
-    logFinal=[]
 
     for fileA in fileListA:
-        if fileA in fileListR:
+        boo=False
+        for fileR in fileListR:
             if fileA['nombre']==fileR['nombre']:
-                tiempoA = datetime.
-                tiempoB=
-                if
-            else:
+                if int(fileR['timestamp'].strip(':'))<int(fileA['timestamp'].strip(':')):
+                    fileR['operacion']=fileA['operacion']
+        if boo==False:
+            fileListR.append(fileA)
 
-def actualiza()
-    ip
+    # aumento ip visitada
+    ipR.append(miip)
+
+    creaLog(ipR,fileListR)
