@@ -4,10 +4,12 @@ import sys
 import os
 import random
 from thread import *
-import threading
+from files import *
+from log import *
 
 diccIPs = {}
-
+ruta = sys.argv[1]
+miip = sys.argv[2]
 
 def lanzador(conn):
     if len(diccIPs.values()) == 1:
@@ -27,7 +29,7 @@ def lanzador(conn):
                     conn.send('r')  #inicia sync
                     enviarFile('logRevision.txt', rnd)
             elif case == 'r': #r actualiza el log de revision
-                recibirFile()
+                recibirFile('logRevision.txt',conn)
                 creaLogRevision('logNodo .txt', 'logRevision.txt')
 
                 ipList, fileList = leerLog('logRevision.txt')
@@ -43,7 +45,6 @@ def lanzador(conn):
                     copiarLogSync('logRevision.txt', 'logSync.txt')
                     enviarFile('logSync.txt', conexion)
                     actualizar()    #ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
-
             elif case == 's': #s actualiza la carpta local
                 recibirFile('logSync.txt')
                 actualizar()
@@ -72,7 +73,7 @@ def actualizar():
                 boo = True
                 if file['operacion'] != a['operacion']:
                     if file['operacion'] == 'delete':
-                        borrarFile(file['nombre'])
+                        borrarFile(file['nombre'], ruta)
                     else:
                         solicitarFile(file['nombre'], file['from'])  #
         if boo == False:
@@ -149,8 +150,8 @@ def serv():
 
 # ############################
 # intenta conectarse con todos los posiubles ips
-posibles = []
-for i in range(2, 254):
+posibles = [] #dar ips default ojoo
+for i in range(2, 50):
     print i
     try:
         cade = '192.168.0.'+ repr(i)
@@ -176,11 +177,12 @@ for ip in posibles:
 # hilo que se encarga de monitorear los archivos y carpetas
 
 def monitorear():
-    miip = sys.argv[2]
-    fe = os.system("ls -l'"+sys.argv[1] +" '|awk '{ print $8 '|' $9 }'")
+    #miip = sys.argv[2]
+    fe = os.system("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'")
     iplocal, fileLocal = leerLog('logNodo.txt')
     for file in fileLocal:
         file['operation']='delete'
+        file['timestamp']=time.time()
     i=0
     for line in fe.split('\n'):
         boo = False
@@ -191,6 +193,9 @@ def monitorear():
                     boo = True
                     file['operacion'] = 'add'
                     file['timestamp'] = campos[0].strip('\n')
-            if boo:
-                fileLocal.append()
+            if not boo:
+                fileLocal.append({'nombre':campos[1].strip('\n'),
+                   'operacion':'add',
+                   'timestamp':campos[0].strip('\n'),
+                   'from':miip})
         i += 1
