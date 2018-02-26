@@ -4,6 +4,7 @@ import sys
 import os
 import random
 from thread import *
+import threading
 from files import *
 from log import *
 
@@ -189,7 +190,7 @@ for i in range(2, 50):
 print 'finalizado posibles: ', posibles
 
 # levanta servidor como hilo
-server = start_new_thread(serv())
+server = threading.Thread(target=serv, args=()).start()
 print 'Se levanto el servidor'
 
 # se coneccta como cliente
