@@ -196,7 +196,7 @@ print 'Se levanto el servidor'
 # se coneccta como cliente
 for ip in posibles:
     try:
-        start_new_thread(conectar(ip))
+        threading.Thread(target=conectar, args=(ip,)).start()
     except:
         pass
 print 'finalizo busqueda e intento de conexion '
