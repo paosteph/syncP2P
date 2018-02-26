@@ -66,6 +66,7 @@ def lanzador(conn):
 def actualizar():
     ipListSync, fileListSync = leerLog('logSync.txt')
     ipListLocal, fileListLocal = leerLog('logNodo.txt') # log Local .txt
+
     for file in fileListSync:
         boo = False
         for a in fileListLocal:

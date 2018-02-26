@@ -1,3 +1,5 @@
+import os
+
 def creaLog(listaIP,listaArchivos):
     with open('log.txt','w') as archivoLog:
 
@@ -58,5 +60,7 @@ def actualizaLogRevision(logA,logR,miip):
 
     creaLog(ipR,fileListR)
 
-def copiarLogSync():
+def copiarLogSync(fileA, fileB):
+    os.system('cp '+fileA+' '+ fileB)
+    print 'logSync copiado en logRevision'
 
