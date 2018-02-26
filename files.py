@@ -4,6 +4,7 @@ BUFFER_SIZE = 1024
 
 def enviarFile(file, conn):
     f = open(file, 'rb')
+    print 'enviando: ',file
     while True:
         l = f.read(BUFFER_SIZE)
         while (l):
@@ -14,8 +15,10 @@ def enviarFile(file, conn):
             f.close()
             #conn.close()
             break
+    print 'fin enviar: ',file
 
 def recibirFile(file, conn):
+    print 'recibiendo: ',file
     with open(file, 'wb') as f:
         print 'file',file,' opened'
         while True:
@@ -28,7 +31,7 @@ def recibirFile(file, conn):
             # write data to a file
             f.write(data)
 
-    print('Recibio archivo')
+    print('Recibio archivo',file)
     #conn.close()
 
 def borrarFile(file, ruta):
@@ -42,5 +45,6 @@ def borrarFile(file, ruta):
 def solicitarFile(arch,con):
     con.send('f')
     con.send(arch)
+    print 'solicitado: ',arch
     recibirFile(arch,con)
 

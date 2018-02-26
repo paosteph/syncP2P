@@ -11,7 +11,16 @@ diccIPs = {}
 ruta = sys.argv[1]
 miip = sys.argv[2]
 
-def lanzador(conn):
+def lanzador(conn):#controla desconexiones de un nodo
+    try:
+        acciones(conn)
+    except:
+        conn.close
+        for k in diccIPs.keys():
+            if diccIPs[k]==conn:
+                del(diccIPs[k])
+
+def acciones(conn):
     if len(diccIPs.values()) == 1:
         rnd = random.choice(diccIPs.values())
         rnd.send('l')
@@ -19,32 +28,38 @@ def lanzador(conn):
     else:
         while True:
             case = conn.recv(1024)
-            print('Se selecciono opcion: ', case)
+            print('Se recibio opcion: ', case)
             if case == 'l': #l define quien inicia la sync
                 msg = conn.recv(1024) #se queda bloqueado escuchando
                 if int(msg) != 0:
                     rnd = random.choice(diccIPs.values())
                     rnd.send(str(int(msg) - 1))
+                    print 'se renvio l con valor: ', msg
                 else:
                     conn.send('r')  #inicia sync
+                    print 'se envio r con valor'
                     enviarFile('logRevision.txt', rnd)
             elif case == 'r': #r actualiza el log de revision
                 recibirFile('logRevision.txt',conn)
-                creaLogRevision('logNodo .txt', 'logRevision.txt')
+                actualizaLogRevision('logNodo .txt', 'logRevision.txt',miip)
 
                 ipList, fileList = leerLog('logRevision.txt')
                 nodosNoVisitados = compararDirecciones(ipList) #compara cada item en cada lista
+                print 'obtuve comparados'
 
                 if len(nodosNoVisitados) > 0:
                     con = diccIPs[nodosNoVisitados[0]]
                     con.send('r')
                     enviarFile('logRevision.txt', con)
+                    print 'renvio r'
                 else:
                     conexion = diccIPs[ipList[0]] #ala primera ip empieza sync
                     conexion.send('s')
                     copiarLogSync('logRevision.txt', 'logSync.txt')
+                    'envio s y logSync'
                     enviarFile('logSync.txt', conexion)
                     actualizar()    #ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
+
             elif case == 's': #s actualiza la carpta local
                 recibirFile('logSync.txt')
                 actualizar()
@@ -58,12 +73,14 @@ def lanzador(conn):
                     # reinicio el tiempo de sync
                     conn.send('l')
                     conn.send(100)
+                    print 'reinicio conteo regresivo'
 
             else: #f envia el archivo
                 archivo = conn.recv(1024)
                 enviarFile(archivo,conn)
 
 def actualizar():
+    print 'empiezo la syncronizacion'
     ipListSync, fileListSync = leerLog('logSync.txt')
     ipListLocal, fileListLocal = leerLog('logNodo.txt') # log Local .txt
 
@@ -82,6 +99,7 @@ def actualizar():
                 solicitarFile(file['nombre'], diccIPs[file['from']])  #
     #
     copiarLogSync('logSync.txt', 'logRevision.txt')
+    print 'termino la syncronizacion'
 
 
 def compararDirecciones(ipList):
@@ -99,10 +117,10 @@ def conectar(ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) #reusar socket
     s.connect((HOST, PORT))
-    print 'conectado al punto ' + ip
+    print 'conectado como cliente al punto ' + ip
     diccIPs[ip] = s
     #time.sleep(1)
-    print 'Conexiones exitosas: ', diccIPs.values()
+    print 'todas las conexiones: ', diccIPs.values()
     lanzador(s) #inicia
 
 #conecto como servidor
@@ -115,7 +133,7 @@ def serv():
 
     # ******************************************
     nc = 10         #num clientes
-    HOST = ''  # Symbolic name meaning all available interfaces
+    HOST = miip  # Symbolic name meaning all available interfaces
     PORT = 8888  # Arbitrary non-privileged port
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -152,6 +170,7 @@ def serv():
 # ############################
 # intenta conectarse con todos los posiubles ips
 posibles = [] #dar ips default ojoo
+print 'calculando posibles ip'
 for i in range(2, 50):
     print i
     try:
@@ -164,9 +183,11 @@ for i in range(2, 50):
             print 'Find, succes'
     except:
         continue
+print 'finalizado posibles: ', posibles
 
 # levanta servidor como hilo
 server = start_new_thread(serv())
+print 'Se levanto el servidor'
 
 # se coneccta como cliente
 for ip in posibles:
@@ -174,12 +195,13 @@ for ip in posibles:
         start_new_thread(conectar(ip))
     except:
         pass
+print 'finalizo busqueda e intento de conexion '
 
 # hilo que se encarga de monitorear los archivos y carpetas
 
 def monitorear():
     #miip = sys.argv[2]
-    fe = os.system("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'")
+    fe = os.popen("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'").read()
     iplocal, fileLocal = leerLog('logNodo.txt')
     for file in fileLocal:
         file['operation']='delete'
