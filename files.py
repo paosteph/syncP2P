@@ -33,5 +33,7 @@ def recibirFile(file, conn):
 
 def borrarFile(file, ruta):
     fd = os.system('rm '+ruta+' '+file)
-    if fd ==n
-    print file, ' : borrado'
+    if 'No se pudo acceder al fichero' in fd:
+        print 'Error borrando, no existe'
+    else:
+        print file, ' : borrado'

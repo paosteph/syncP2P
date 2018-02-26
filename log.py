@@ -57,3 +57,6 @@ def actualizaLogRevision(logA,logR,miip):
     ipR.append(miip)
 
     creaLog(ipR,fileListR)
+
+def copiarLogSync():
+    

@@ -78,7 +78,7 @@ def actualizar():
                         solicitarFile(file['nombre'], file['from'])  #
         if boo == False:
             if file['operacion'] == 'add':
-                solicitarFile(file['nombre'], file['from'])  #
+                solicitarFile(file['nombre'], diccIPs[file['from']])  #
     #
     copiarLogSync('logSync.txt', 'logRevision.txt')
 
