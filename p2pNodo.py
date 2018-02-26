@@ -169,8 +169,10 @@ def serv():
 
 # ############################
 # intenta conectarse con todos los posiubles ips
-posibles = [] #dar ips default ojoo
+posibles = ['192.168.59.132','192.168.59.149'] #dar ips default ojoo
+posibles.remove(miip)
 print 'calculando posibles ip'
+"""
 for i in range(2, 50):
     print i
     try:
@@ -183,6 +185,7 @@ for i in range(2, 50):
             print 'Find, succes'
     except:
         continue
+"""
 print 'finalizado posibles: ', posibles
 
 # levanta servidor como hilo
