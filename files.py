@@ -37,3 +37,10 @@ def borrarFile(file, ruta):
         print 'Error borrando, no existe'
     else:
         print file, ' : borrado'
+
+
+def solicitarFile(arch,con):
+    con.send('f')
+    con.send(arch)
+    recibirFile(arch,con)
+

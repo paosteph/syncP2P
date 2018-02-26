@@ -59,4 +59,4 @@ def actualizaLogRevision(logA,logR,miip):
     creaLog(ipR,fileListR)
 
 def copiarLogSync():
-    
+
