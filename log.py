@@ -74,5 +74,5 @@ def actualizaLogRevision(logA,logR,miip):
 
 def copiarLogSync(fileA, fileB):
     os.system('cp '+fileA+' '+ fileB)
-    print 'logSync copiado en logRevision'
+    print fileA,' copiado en ',fileB
 

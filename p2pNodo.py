@@ -55,6 +55,7 @@ def acciones(conn):
             else:
                 conexion = diccIPs[ipList[0]]  # ala primera ip empieza sync
                 conexion.send('s')
+                time.sleep(1)
                 copiarLogSync('logRevision.txt', 'logSync.txt')
                 print 'envio s y logSync'
                 enviarFile('logSync.txt', conexion)
@@ -103,7 +104,7 @@ def actualizar():
             if file['operacion'] == 'add':
                 solicitarFile(file['nombre'], diccIPs[file['from']])  #
     #
-    copiarLogSync('logSync.txt', 'logRevision.txt')
+    copiarLogSync('logSync.txt', 'logNodo.txt')
     print 'termino la syncronizacion'
 
 
