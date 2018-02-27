@@ -55,7 +55,9 @@ def actualizaLogRevision(logA,logR,miip):
             if fileA['nombre']==fileR['nombre']:
                 print('coinciden archivos')
                 a=int(fileR['timestamp'].strip(':'))
+                print 'a',a
                 b=int(fileA['timestamp'].strip(':'))
+                print 'b',b
                 if a <= b:
                     fileR['operacion']=fileA['operacion']
                     print 'comparo horas'
