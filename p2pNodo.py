@@ -70,6 +70,7 @@ def acciones(conn):
 
             actualizar()
             ipList, fileList = leerLog('logSync.txt')
+            ipList.append(miip)# añado ip nood actual
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
 
             if len(nodosNoVisitados) > 0:
