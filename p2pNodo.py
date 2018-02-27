@@ -72,9 +72,14 @@ def acciones(conn):
                 conn.send('100')
                 print 'reinicio conteo regresivo'
 
-        else:  # f envia el archivo
+        elif case=='f':  # f envia el archivo
             archivo = conn.recv(1024)
             enviarFile(archivo, conn)
+        else:
+            conn.close()
+            for k in diccIPs.keys():
+                if diccIPs[k] == conn:
+                    del (diccIPs[k])
 
 def actualizar():
     print 'empiezo la syncronizacion'
@@ -168,7 +173,7 @@ def monitorear():
     print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
     if '' in iplocal:
-        iplocal.remove('')
+        iplocal.remove('') ###OJOOO
     if not miip in iplocal:
         iplocal.append(miip)
     for file in fileLocal:
@@ -189,6 +194,7 @@ def monitorear():
                               'operacion': 'add',
                               'timestamp': campos[0].strip('\n'),
                               'from': miip})
+    print 'Iplocal: ', iplocal, ' FileLocal: ', fileLocal
     creaLog(iplocal,fileLocal)  #escribe el log
 
 #fin monitorear

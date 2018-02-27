@@ -19,7 +19,7 @@ def leerLog(archivoLog):
     with open (archivoLog,'r') as arch:
         # leo IP
         line=arch.readline()
-        while not 'Files' in line:
+        while not 'Files:' in line:
             ipList.append(line)
             line=arch.readline()
 
