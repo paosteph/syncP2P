@@ -33,6 +33,7 @@ def recibirFile(file, conn):
                 break
             # write data to a file
             f.write(data)
+            data = ''
 
     print('Recibio archivo',file)
     #conn.close()
