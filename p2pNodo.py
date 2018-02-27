@@ -29,7 +29,8 @@ def acciones(conn):
         if case == 'l':  # l define quien inicia la sync
             msg = conn.recv(1024)  # se queda bloqueado escuchando
             if int(msg) != 0:
-                temp=diccIPs.values().remove(None)
+                temp=diccIPs.values()
+                temp.remove(None)
                 rnd = random.choice(temp)
                 rnd.send('l')
                 rnd.send(str(int(msg) - 1))
