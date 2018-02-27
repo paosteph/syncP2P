@@ -4,13 +4,16 @@ def creaLog(listaIP,listaArchivos):
     with open('logNodo.txt','w') as archivoLog:
         # escribo IP
         for ip in listaIP:
-            archivoLog.write(str(ip)+'\n')
+            archivoLog.write(ip+'\n')
 
         # escribo Archivos
         archivoLog.write('Files:\n')
         for file in listaArchivos:
+            print 'va a escribir logR'
             line=str(file['nombre'])+'|'+str(file['operacion'])+'|'+str(file['timestamp'])+'|'+str(file['from'])
-            archivoLog.write(line+'\n')
+            archivoLog.write('\n')
+            archivoLog.write(line)
+            archivoLog.write('\n')
 
 def leerLog(archivoLog):
     ipList=[]

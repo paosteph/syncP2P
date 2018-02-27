@@ -171,6 +171,7 @@ def serv():
 def monitorear():
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
+
     iplocal, fileLocal = leerLog('logNodo.txt')
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
@@ -246,7 +247,7 @@ if len(diccIPs.values()) == 1:
 # hilo que se encarga de monitorear los archivos y carpetas
 while True:
     monitorear()
-    time.sleep(180)
+    time.sleep(30)
 
 
 
