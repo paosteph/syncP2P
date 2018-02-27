@@ -1,2 +1,2 @@
 Files:
-a|delete|11:10|i
+a|delete|11:10|ip
