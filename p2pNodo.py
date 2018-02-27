@@ -176,7 +176,7 @@ def monitorear():
     print 'ilocal', iplocal
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
-    if not miip in iplocal:
+    if miip not in iplocal or miip+'\n' not in iplocal:
         iplocal.append(miip)
         print 'miip', miip
     print 'ilocal 2pasada', iplocal

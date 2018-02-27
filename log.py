@@ -25,7 +25,7 @@ def leerLog(archivoLog):
         # leo IP
         line=arch.readline()
         while not 'Files:' in line:
-            ipList.append(line)
+            ipList.append(line.strip('\n'))#ojo strip
             line=arch.readline()
 
         # leo archivos
