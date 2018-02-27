@@ -170,22 +170,23 @@ def monitorear():
     for file in fileLocal:
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M") ##poner bien la hora y resta..OJOOO
-    i=0
-    for line in fe.split('\n'):
+
+    for i in range(1,len(fe)-1):
         boo = False
-        campos = line.split('|')
-        if i != 0:
-            for file in fileLocal:
-                if file['nombre'] == campos[1].strip('\n'):
-                    boo = True
-                    file['operacion'] = 'add'
-                    file['timestamp'] = campos[0].strip('\n')
-            if not boo:
-                fileLocal.append({'nombre':campos[1].strip('\n'),
-                   'operacion':'add',
-                   'timestamp':campos[0].strip('\n'),
-                   'from':miip})
-        i += 1
+        corta = fe.split('\n')
+        campos = corta[i].split('|')
+        for file in fileLocal:
+            if file['nombre'] == campos[1].strip('\n'):
+                boo = True
+                file['operacion'] = 'add'
+                file['timestamp'] = campos[0].strip('\n')
+        if not boo:
+            fileLocal.append({'nombre': campos[1].strip('\n'),
+                              'operacion': 'add',
+                              'timestamp': campos[0].strip('\n'),
+                              'from': miip})
+    creaLog(iplocal,fileLocal)  #escribe el log
+
 #fin monitorear
 
 # ############################
