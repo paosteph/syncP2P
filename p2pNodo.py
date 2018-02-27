@@ -173,18 +173,15 @@ def monitorear(x):
     print 'monitoreando', fe
 
     iplocal, fileLocal = leerLog('logNodo.txt')
-    print 'ilocal', iplocal
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
     if x==0:
         iplocal.append(miip)
-        print 'miip', miip
-    print 'ilocal 2pasada', iplocal
     for file in fileLocal:
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M")
 
-    for i in range(1,len(fe)-1):
+    for i in range(1,len(fe)):
         boo = False
         corta = fe.split('\n')
         campos = corta[i].split('|')
@@ -198,7 +195,7 @@ def monitorear(x):
                               'operacion': 'add',
                               'timestamp': campos[0].strip('\n'),
                               'from': miip})
-    print 'Iplocal: ', iplocal, ' FileLocal: ', fileLocal
+    #print 'Iplocal: ', iplocal, ' FileLocal: ', fileLocal
     creaLog(iplocal,fileLocal,'logNodo.txt')  #escribe el log
 
 
@@ -253,7 +250,7 @@ x=0
 while True:
     monitorear(x)
     x+=1
-    time.sleep(30)
+    time.sleep(180)
 
 
 

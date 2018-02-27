@@ -3,9 +3,7 @@ import os
 def creaLog(listaIP,listaArchivos,nombre):
     with open(nombre,'w') as archivoLog:
         # escribo IP
-        print 'listaIO ', listaIP
         for ip in listaIP:
-            print 'ip ',ip
             archivoLog.write(ip.strip('\n')+'\n')
 
         # escribo Archivos
@@ -47,7 +45,7 @@ def leerLog(archivoLog):
 def actualizaLogRevision(logA,logR,miip):
     ipA,fileListA=leerLog(logA)
     ipR,fileListR=leerLog(logR)
-
+    print 'Actualizando log revision'
     for fileA in fileListA:
         boo=False
         for fileR in fileListR:
@@ -59,7 +57,8 @@ def actualizaLogRevision(logA,logR,miip):
 
     # aumento ip visitada
     ipR.append(miip)
-
+    print 'ip actuales: ', ipR
+    print 'filelist: ', fileListR
     creaLog(ipR,fileListR,'logRevision.txt')
 
 def copiarLogSync(fileA, fileB):
