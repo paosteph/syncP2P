@@ -167,6 +167,8 @@ def monitorear():
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
+    if '' in iplocal:
+        iplocal.remove('')
     if not miip in iplocal:
         iplocal.append(miip)
     for file in fileLocal:
