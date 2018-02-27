@@ -209,7 +209,7 @@ def monitorear(x):
 posibles = ['192.168.59.132','192.168.59.149'] #dar ips default ojoo
 posibles.remove(miip)
 
-diccIPs[miip]=None #doy direccion local vacía
+diccIPs[miip]='' #doy direccion local vacía
 print 'calculando posibles ip'
 """
 for i in range(2, 50):
