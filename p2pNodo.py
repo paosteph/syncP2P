@@ -129,7 +129,7 @@ def serv():
 
     # ******************************************
     nc = 10         #num clientes
-    HOST = miip  # Symbolic name meaning all available interfaces
+    HOST = ''  # Symbolic name meaning all available interfaces
     PORT = 8888  # Arbitrary non-privileged port
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
