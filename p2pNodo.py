@@ -54,7 +54,8 @@ def acciones(conn):
                 enviarFile('logRevision.txt', con)
                 print 'renvio r'
             else:
-                temp=ipList.remove(miip)
+                temp=ipList
+                temp.remove(miip)
                 conexion = diccIPs[temp[0]]  # ala primera ip empieza sync
                 conexion.send('s')
                 time.sleep(1)
@@ -64,12 +65,11 @@ def acciones(conn):
                 actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
         elif case == 's':  # s actualiza la carpta local
-            t = recibirFile('logSync.txt')
-            while not t:
-                try:
-                    t=recibirFile('logSync.txt')
-                except:
-                    print('error recibiendo sync')
+
+            while True:
+                if recibirFile('logSync.txt'):
+                    break
+
             actualizar()
             ipList, fileList = leerLog('logSync.txt')
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
