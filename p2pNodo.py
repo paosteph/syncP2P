@@ -13,13 +13,16 @@ ruta = sys.argv[1]
 miip = sys.argv[2]
 
 def lanzador(conn):#controla desconexiones de un nodo
-    try:
-        acciones(conn)
+    #try:
+    acciones(conn)
+
+    """
     except:
         conn.close
         for k in diccIPs.keys():
             if diccIPs[k]==conn:
                 del(diccIPs[k])
+    """
 
 def acciones(conn):
     while True:
@@ -175,7 +178,7 @@ def monitorear(x):
     iplocal, fileLocal = leerLog('logNodo.txt')
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
-    if x==0:
+    if len(iplocal)==0:
         iplocal.append(miip)
     for file in fileLocal:
         file['operation']='delete'
