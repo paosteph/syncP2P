@@ -58,10 +58,10 @@ def acciones(conn):
                 temp=ipList
                 temp.remove(miip)
                 conexion = diccIPs[temp[0]]  # ala primera ip empieza sync
+                copiarLogSync('logRevision.txt', 'logSync.txt')
                 actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
                 conexion.send('s')
                 time.sleep(1)
-                copiarLogSync('logRevision.txt', 'logSync.txt')
                 print 'envio s y logSync'
                 enviarFile('logSync.txt', conexion)
 
