@@ -167,7 +167,8 @@ def monitorear():
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
-    iplocal.append(miip)
+    if not miip in iplocal:
+        iplocal.append(miip)
     for file in fileLocal:
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M")
