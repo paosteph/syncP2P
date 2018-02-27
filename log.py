@@ -1,8 +1,7 @@
 import os
 
 def creaLog(listaIP,listaArchivos):
-    with open('log.txt','w') as archivoLog:
-
+    with open('logNodo.txt','w') as archivoLog:
         # escribo IP
         for ip in listaIP:
             archivoLog.write(str(ip)+'\n')

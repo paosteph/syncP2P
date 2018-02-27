@@ -236,7 +236,7 @@ if len(diccIPs.values()) == 1:
 # hilo que se encarga de monitorear los archivos y carpetas
 while True:
     monitorear()
-    time.sleep(60)
+    time.sleep(180)
 
 
 
