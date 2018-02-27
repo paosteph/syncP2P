@@ -197,10 +197,10 @@ def monitorear(x):
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M")
 
-    for i in range(1,len(fe)-1): #fe al final tiene espacio en blanco
+    aux=fe.splitlines()
+    for i in range(1,len(aux)): #fe al final tiene espacio en blanco
         boo = False
-        corta = fe.split('\n')
-        campos = corta[i].split('|')
+        campos = aux[i].split('|')
         for file in fileLocal:
             if file['nombre'] == campos[1].strip('\n'):
                 boo = True

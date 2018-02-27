@@ -67,7 +67,8 @@ def actualizaLogRevision(logA,logR,miip):
             print('agrego archivo nuevo')
     fileListR += fileListTemp
     # aumento ip visitada
-    ipR.append(miip)
+    if miip not in ipR:
+        ipR.append(miip)
     print 'ip actuales: ', ipR
     print 'filelist: ', fileListR
     creaLog(ipR,fileListR,'logRevision.txt')
