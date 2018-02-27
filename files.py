@@ -1,4 +1,5 @@
 import os
+import time
 #from socket import error
 
 BUFFER_SIZE = 1024
@@ -11,7 +12,7 @@ def enviarFile(file, conn):
         l = f.read(BUFFER_SIZE)
         while (l):
             conn.send(l)
-            print 'Tipo dato l: ', type(l)
+            #print 'Tipo dato l: ', type(l)
             print 'Enviado ',repr(l)
             l = f.read(BUFFER_SIZE)
         #if not l:
@@ -19,7 +20,8 @@ def enviarFile(file, conn):
         #    f.close()
             #conn.close()
         break
-    conn.send(chr(1))
+    time.sleep(1)
+    conn.send('12345')
     f.close()
 
     print 'fin enviar: ',file
@@ -29,38 +31,15 @@ def recibirFile(file, conn):
     with open(file, 'wb') as f:
         print 'file',file,' opened'
         while True:
-            try:
-                data = conn.recv(BUFFER_SIZE)
-            except:
-                print("Error de lectura.")
-                break
-            else:
-                if data:
-                    # Compatibilidad con Python 3.
-                    if isinstance(data, bytes):
-                        end = data[0] == 1
-                    else:
-                        end = data == chr(1)
-                    if not end:
-                        # Almacenar datos.
-                        f.write(data)
-                        print('data: ', (data))
-                    else:
-                        break
-            #print 'Tipo de dato de data: ',type(data)
-            """
+            data = conn.recv(BUFFER_SIZE)
             print('data: ', (data))
-            if '1' in data:
+            if '12345' in data:
                 f.close()
-                print 'file close()'
+                print 'file cerrado'
                 break
             # write data to a file
             f.write(data)
-            data = ''
-            """
 
-    print("El archivo se ha recibido correctamente.")
-    f.close()
     print('Recibio archivo',file)
     #conn.close()
 
