@@ -10,10 +10,7 @@ def creaLog(listaIP,listaArchivos):
         # escribo Archivos
         archivoLog.write('Files:\n')
         for file in listaArchivos:
-            line=file['nombre']+'|'
-            +file['operacion']+'|'
-            +file['timestamp']+'|'
-            +file['from']
+            line=str(file['nombre'])+'|'+str(file['operacion'])+'|'+str(file['timestamp'])+'|'+str(file['from'])
             archivoLog.write(line+'\n')
 
 def leerLog(archivoLog):
