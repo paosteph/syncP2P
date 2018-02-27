@@ -29,6 +29,7 @@ def acciones(conn):
             msg = conn.recv(1024)  # se queda bloqueado escuchando
             if int(msg) != 0:
                 rnd = random.choice(diccIPs.values())
+                rnd.send('l')
                 rnd.send(str(int(msg) - 1))
                 print 'se renvio l con valor: ', msg
             else:
