@@ -38,11 +38,11 @@ def acciones(conn):
                 enviarFile('logNodo.txt', rnd)
         elif case == 'r':  # r actualiza el log de revision
             recibirFile('logRevision.txt', conn)
-            actualizaLogRevision('logNodo .txt', 'logRevision.txt', miip)
+            actualizaLogRevision('logNodo.txt', 'logRevision.txt', miip)
 
             ipList, fileList = leerLog('logRevision.txt')
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
-            print 'obtuve comparados'
+            print 'obtuve no visi: ', nodosNoVisitados
 
             if len(nodosNoVisitados) > 0:
                 con = diccIPs[nodosNoVisitados[0]]
@@ -53,7 +53,7 @@ def acciones(conn):
                 conexion = diccIPs[ipList[0]]  # ala primera ip empieza sync
                 conexion.send('s')
                 copiarLogSync('logRevision.txt', 'logSync.txt')
-                'envio s y logSync'
+                print 'envio s y logSync'
                 enviarFile('logSync.txt', conexion)
                 actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
@@ -181,7 +181,7 @@ def monitorear(x):
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M")
 
-    for i in range(1,len(fe)):
+    for i in range(1,len(fe)-1): #fe al final tiene espacio en blanco
         boo = False
         corta = fe.split('\n')
         campos = corta[i].split('|')
