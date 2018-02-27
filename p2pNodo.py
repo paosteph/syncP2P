@@ -168,7 +168,7 @@ def serv():
             diccIPs[addr]=conn
     s.close()
 
-def monitorear():
+def monitorear(x):
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
 
@@ -176,7 +176,7 @@ def monitorear():
     print 'ilocal', iplocal
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
-    if miip not in iplocal or miip+'\n' not in iplocal:
+    if x==0:
         iplocal.append(miip)
         print 'miip', miip
     print 'ilocal 2pasada', iplocal
@@ -249,8 +249,10 @@ if len(diccIPs.values()) == 1:
 
 
 # hilo que se encarga de monitorear los archivos y carpetas
+x=0
 while True:
-    monitorear()
+    monitorear(x)
+    x+=1
     time.sleep(30)
 
 
