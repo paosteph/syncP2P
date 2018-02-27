@@ -199,7 +199,8 @@ def monitorear():
                               'timestamp': campos[0].strip('\n'),
                               'from': miip})
     print 'Iplocal: ', iplocal, ' FileLocal: ', fileLocal
-    creaLog(iplocal,fileLocal,'logRevision.txt')  #escribe el log
+    creaLog(iplocal,fileLocal,'logNodo.txt')  #escribe el log
+
 
 #fin monitorear
 
