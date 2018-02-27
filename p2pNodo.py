@@ -12,7 +12,8 @@ diccIPs = {}
 ruta = sys.argv[1]
 miip = sys.argv[2]
 
-def lanzador(conn):#controla desconexiones de un nodo
+#controla desconexiones de un nodo
+def lanzador(conn):
     try:
         acciones(conn)
     except:
@@ -21,7 +22,7 @@ def lanzador(conn):#controla desconexiones de un nodo
             if diccIPs[k]==conn:
                 del(diccIPs[k])
 
-
+#todas las posibles soluciones a una peticion de un nodo
 def acciones(conn):
     while True:
         case = conn.recv(1024)
@@ -81,10 +82,7 @@ def acciones(conn):
                 enviarFile('logSync.txt', con)
                 # reinicio el tiempo de sync
             else:
-                print 'fin sincronizar nodos'
-                conn.send('l')
-                conn.send('100')
-                print 'reinicio conteo regresivo'
+                hiloTemporizadr(con)
 
         elif case=='f':  # f envia el archivo
             archivo = conn.recv(1024)
@@ -95,29 +93,37 @@ def acciones(conn):
                 if diccIPs[k] == conn:
                     del (diccIPs[k])
 
+# borra, copia archivos creados en la carpeta remota
 def actualizar():
     print 'empiezo la syncronizacion'
+
+    #cargon info de los logs
     ipListSync, fileListSync = leerLog('logSync.txt')
     ipListLocal, fileListLocal = leerLog('logNodo.txt') # log Local .txt
 
+    # comparo informacion de sincronizacion e infrmacion local
     for file in fileListSync:
         boo = False
         for a in fileListLocal:
             if file['nombre'] == a['nombre']:
                 boo = True
+                # ejecuto operacion si la operacion cambia de un archivo cambia
                 if file['operacion'] != a['operacion']:
                     if file['operacion'] == 'delete':
                         borrarFile(file['nombre'], ruta)
                     else:
                         solicitarFile(file['nombre'], file['from'])  #
+        # solicito un archivo si no existia localmente
         if boo == False:
             if file['operacion'] == 'add':
                 solicitarFile(file['nombre'], diccIPs[file['from']])  #
-    #
+
+    # el log local tiene ahora el contenido del syncronizado
     copiarLogSync('logSync.txt', 'logNodo.txt')
     print 'termino la syncronizacion'
 
 
+#compara ip de un log con ipdel Diccionario de conexxiones
 def compararDirecciones(ipList):
     print 'comparandodirecciones'
     list = []
@@ -185,10 +191,13 @@ def serv():
             diccIPs[addr[0]]=conn
     s.close()
 
+#chequea archivos en la carpeta compartida
 def monitorear(x):
+    #contenido de ls
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
 
+    # todoo el contenido como borrado
     iplocal, fileLocal = leerLog('logNodo.txt')
     if '' in iplocal:
         iplocal.remove('') ###OJOOO
@@ -198,15 +207,18 @@ def monitorear(x):
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M")
 
+    #comparo ultimo log local con el contenido actual de ls
     aux=fe.splitlines()
-    for i in range(1,len(aux)): #fe al final tiene espacio en blanco
+    for i in range(1,len(aux)):
         boo = False
         campos = aux[i].split('|')
+        # valido un archivo si existe y no ha sido elminado
         for file in fileLocal:
             if file['nombre'] == campos[1].strip('\n'):
                 boo = True
                 file['operacion'] = 'add'
                 file['timestamp'] = campos[0].strip('\n')
+        # se coloca nuevos campos
         if not boo:
             fileLocal.append({'nombre': campos[1].strip('\n'),
                               'operacion': 'add',
@@ -217,6 +229,18 @@ def monitorear(x):
 
 
 #fin monitorear
+
+# hilo temporizador reinicio sincronizacion
+def hiloTemporizadr(conn):
+    threading.Thread(target=temporizador, args=(conn))
+
+# este hilo espera para poder realizar la sincronizacion nuevamente
+def temporizador(conn):
+    print 'fin sincronizar nodos'
+    time.sleep(60)
+    conn.send('l')
+    conn.send('100')
+    print 'reinicio conteo regresivo'
 
 # ############################
 # intenta conectarse con todos los posiubles ips
@@ -257,11 +281,12 @@ print 'finalizo busqueda e intento de conexion '
 
 time.sleep(4)
 
+# si es el segundo equipo conectarse en la red inicia sincronizacion
 if len(diccIPs.values()) == 1:
     rnd = random.choice(diccIPs.values())
     print 'Por enviar a: ',rnd
     rnd.send('l')
-    rnd.send('100')
+    rnd.send('30')
 
 diccIPs[miip]=None #doy direccion local vacia
 
