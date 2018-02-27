@@ -284,11 +284,14 @@ print 'finalizo busqueda e intento de conexion '
 time.sleep(4)
 
 # si es el segundo equipo conectarse en la red inicia sincronizacion
-if len(diccIPs.values()) == 1:
+#if len(diccIPs.values()) == 1:
+try:
     rnd = random.choice(diccIPs.values())
     print 'Por enviar a: ',rnd
     rnd.send('l')
     rnd.send('30')
+except:
+    print 'error sincro inicial'
 
 diccIPs[miip]=None #doy direccion local vacia
 
