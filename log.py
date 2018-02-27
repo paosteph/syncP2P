@@ -47,15 +47,20 @@ def actualizaLogRevision(logA,logR,miip):
     ipR,fileListR=leerLog(logR)
     fileListTemp=[]
     print 'Actualizando log revision'
+    print 'fileA: ',fileListA
+    print 'fileR: ', fileListR
+    boo = False  # para que sino existe un archivo en la revision, se aniada
     for fileA in fileListA:
-        boo=False #para que sino existe un archivo en la revision, se aniada
         for fileR in fileListR:
             if fileA['nombre']==fileR['nombre']:
+                print('coinciden archivos')
                 if int(fileR['timestamp'].strip(':'))<int(fileA['timestamp'].strip(':')):
                     fileR['operacion']=fileA['operacion']
+                    print 'comparo horas'
                 boo=True
         if boo==False:
             fileListTemp.append(fileA)
+            print('agrego archivo nuevo')
     fileListR += fileListTemp
     # aumento ip visitada
     ipR.append(miip)
