@@ -9,7 +9,7 @@ def creaLog(listaIP,listaArchivos,nombre):
         # escribo Archivos
         archivoLog.write('Files:')
         for file in listaArchivos:
-            print 'va a escribir logR'
+            #print 'va a escribir logR'
             line=str(file['nombre'])+'|'+str(file['operacion'])+'|'+str(file['timestamp'])+'|'+str(file['from'])
             archivoLog.write('\n')
             archivoLog.write(line)
@@ -35,7 +35,7 @@ def leerLog(archivoLog):
                    'operacion':campos[1].strip('\n'),
                    'timestamp':campos[2].strip('\n'),
                    'from':campos[3].strip('\n')}
-            print diccionCampo
+            #print diccionCampo
             fileList.append(diccionCampo)
             line=arch.readline()
 

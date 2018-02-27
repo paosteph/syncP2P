@@ -119,6 +119,7 @@ def actualizar():
 
 
 def compararDirecciones(ipList):
+    print 'comparandodirecciones'
     list = []
     print diccIPs.keys()
     for ipA in ipList:
