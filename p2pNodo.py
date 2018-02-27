@@ -87,6 +87,7 @@ def acciones(conn):
 
         elif case=='f':  # f envia el archivo
             archivo = conn.recv(1024)
+            print 'se solicito',archivo
             enviarFile(archivo, conn)
         else:
             conn.close()
@@ -113,11 +114,11 @@ def actualizar():
                     if file['operacion'] == 'delete':
                         borrarFile(file['nombre'], ruta)
                     else:
-                        solicitarFile(file['nombre'], file['from'])  #
+                        solicitarFile(ruta+file['nombre'], file['from'])  #
         # solicito un archivo si no existia localmente
         if boo == False:
             if file['operacion'] == 'add':
-                solicitarFile(file['nombre'], diccIPs[file['from']])  #
+                solicitarFile(ruta+file['nombre'], diccIPs[file['from']])  #
 
     # el log local tiene ahora el contenido del syncronizado
     copiarLogSync('logSync.txt', 'logNodo.txt')
