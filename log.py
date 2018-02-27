@@ -28,6 +28,7 @@ def leerLog(archivoLog):
             line=arch.readline()
 
         # leo archivos
+        line = arch.readline()
         while line:
             campos = line.split('|')
             # creo un diccionario de los campos y lo pongo en la lista
