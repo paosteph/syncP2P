@@ -48,7 +48,7 @@ def actualizaLogRevision(logA,logR,miip):
     fileListTemp=[]
     print 'Actualizando log revision'
     for fileA in fileListA:
-        boo=False #para que sino existe un archivo en la revision, se añada
+        boo=False #para que sino existe un archivo en la revision, se aniada
         for fileR in fileListR:
             if fileA['nombre']==fileR['nombre']:
                 if int(fileR['timestamp'].strip(':'))<int(fileA['timestamp'].strip(':')):
