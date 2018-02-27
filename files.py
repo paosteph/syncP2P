@@ -9,7 +9,8 @@ def enviarFile(file, conn):
         l = f.read(BUFFER_SIZE)
         while (l):
             conn.send(l)
-            print('Enviado ',repr(l))
+            print 'Tipo dato l: ', type(l)
+            print 'Enviado ',repr(l)
             l = f.read(BUFFER_SIZE)
         if not l:
             conn.send('12345')
@@ -26,7 +27,7 @@ def recibirFile(file, conn):
             data = conn.recv(BUFFER_SIZE)
             print 'Tipo de dato de data: ',type(data)
             print('data: ', (data))
-            if data=='12345':
+            if '12345' in data:
                 f.close()
                 print 'file close()'
                 break
