@@ -209,7 +209,7 @@ def monitorear(x):
 posibles = ['192.168.59.132','192.168.59.149'] #dar ips default ojoo
 posibles.remove(miip)
 
-diccIPs[miip]=None #doy direccion local vacia
+
 print 'calculando posibles ip'
 """
 for i in range(2, 50):
@@ -248,6 +248,8 @@ if len(diccIPs.values()) == 1:
     print 'Por enviar a: ',rnd
     rnd.send('l')
     rnd.send('100')
+
+diccIPs[miip]=None #doy direccion local vacia
 
 
 # hilo que se encarga de monitorear los archivos y carpetas
