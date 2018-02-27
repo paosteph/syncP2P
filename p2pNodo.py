@@ -246,7 +246,8 @@ def temporizador(conn):
 
 # ############################
 # intenta conectarse con todos los posiubles ips
-posibles = ['192.168.59.132','192.168.59.149','192.168.59.150'] #dar ips default ojoo
+#posibles = ['192.168.59.132','192.168.59.149','192.168.59.150'] #dar ips default ojoo
+posibles = ['192.168.59.132','192.168.59.149']
 posibles.remove(miip)
 
 
