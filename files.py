@@ -54,6 +54,7 @@ def borrarFile(file, ruta):
 
 def solicitarFile(arch,con):
     con.send('f')
+    time.sleep(2)
     con.send(arch)
     print 'solicitado: ',arch
     recibirFile(arch,con)
