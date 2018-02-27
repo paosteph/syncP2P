@@ -182,7 +182,7 @@ def serv():
         #time.sleep(1)
         global diccIPs
         if not addr in diccIPs.keys():
-            diccIPs[addr]=conn
+            diccIPs[addr[0]]=conn
     s.close()
 
 def monitorear(x):
