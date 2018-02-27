@@ -22,63 +22,58 @@ def lanzador(conn):#controla desconexiones de un nodo
                 del(diccIPs[k])
 
 def acciones(conn):
-    if len(diccIPs.values()) == 1:
-        rnd = random.choice(diccIPs.values())
-        rnd.send('l')
-        rnd.send(100)
-    else:
-        while True:
-            case = conn.recv(1024)
-            print('Se recibio opcion: ', case)
-            if case == 'l': #l define quien inicia la sync
-                msg = conn.recv(1024) #se queda bloqueado escuchando
-                if int(msg) != 0:
-                    rnd = random.choice(diccIPs.values())
-                    rnd.send(str(int(msg) - 1))
-                    print 'se renvio l con valor: ', msg
-                else:
-                    conn.send('r')  #inicia sync
-                    print 'se envio r con valor'
-                    enviarFile('logRevision.txt', rnd)
-            elif case == 'r': #r actualiza el log de revision
-                recibirFile('logRevision.txt',conn)
-                actualizaLogRevision('logNodo .txt', 'logRevision.txt',miip)
+    while True:
+        case = conn.recv(1024)
+        print('Se recibio opcion: ', case)
+        if case == 'l':  # l define quien inicia la sync
+            msg = conn.recv(1024)  # se queda bloqueado escuchando
+            if int(msg) != 0:
+                rnd = random.choice(diccIPs.values())
+                rnd.send(str(int(msg) - 1))
+                print 'se renvio l con valor: ', msg
+            else:
+                conn.send('r')  # inicia sync
+                print 'se envio r con valor'
+                enviarFile('logRevision.txt', rnd)
+        elif case == 'r':  # r actualiza el log de revision
+            recibirFile('logRevision.txt', conn)
+            actualizaLogRevision('logNodo .txt', 'logRevision.txt', miip)
 
-                ipList, fileList = leerLog('logRevision.txt')
-                nodosNoVisitados = compararDirecciones(ipList) #compara cada item en cada lista
-                print 'obtuve comparados'
+            ipList, fileList = leerLog('logRevision.txt')
+            nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
+            print 'obtuve comparados'
 
-                if len(nodosNoVisitados) > 0:
-                    con = diccIPs[nodosNoVisitados[0]]
-                    con.send('r')
-                    enviarFile('logRevision.txt', con)
-                    print 'renvio r'
-                else:
-                    conexion = diccIPs[ipList[0]] #ala primera ip empieza sync
-                    conexion.send('s')
-                    copiarLogSync('logRevision.txt', 'logSync.txt')
-                    'envio s y logSync'
-                    enviarFile('logSync.txt', conexion)
-                    actualizar()    #ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
+            if len(nodosNoVisitados) > 0:
+                con = diccIPs[nodosNoVisitados[0]]
+                con.send('r')
+                enviarFile('logRevision.txt', con)
+                print 'renvio r'
+            else:
+                conexion = diccIPs[ipList[0]]  # ala primera ip empieza sync
+                conexion.send('s')
+                copiarLogSync('logRevision.txt', 'logSync.txt')
+                'envio s y logSync'
+                enviarFile('logSync.txt', conexion)
+                actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
-            elif case == 's': #s actualiza la carpta local
-                recibirFile('logSync.txt')
-                actualizar()
-                ipList, fileList = leerLog('logSync.txt')
-                nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
+        elif case == 's':  # s actualiza la carpta local
+            recibirFile('logSync.txt')
+            actualizar()
+            ipList, fileList = leerLog('logSync.txt')
+            nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
 
-                if len(nodosNoVisitados) > 0:
-                    con = diccIPs[nodosNoVisitados[0]]
-                    con.send('s')
-                    enviarFile('logSync.txt', con)
-                    # reinicio el tiempo de sync
-                    conn.send('l')
-                    conn.send(100)
-                    print 'reinicio conteo regresivo'
+            if len(nodosNoVisitados) > 0:
+                con = diccIPs[nodosNoVisitados[0]]
+                con.send('s')
+                enviarFile('logSync.txt', con)
+                # reinicio el tiempo de sync
+                conn.send('l')
+                conn.send(100)
+                print 'reinicio conteo regresivo'
 
-            else: #f envia el archivo
-                archivo = conn.recv(1024)
-                enviarFile(archivo,conn)
+        else:  # f envia el archivo
+            archivo = conn.recv(1024)
+            enviarFile(archivo, conn)
 
 def actualizar():
     print 'empiezo la syncronizacion'
@@ -165,8 +160,32 @@ def serv():
         global diccIPs
         if not addr in diccIPs.keys():
             diccIPs[addr]=conn
-
     s.close()
+
+def monitorear():
+    #miip = sys.argv[2]
+    fe = os.popen("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'").read()
+    iplocal, fileLocal = leerLog('logNodo.txt')
+    for file in fileLocal:
+        file['operation']='delete'
+        file['timestamp']=time.strftime("%H:%M") ##poner bien la hora y resta..OJOOO
+    i=0
+    for line in fe.split('\n'):
+        boo = False
+        campos = line.split('|')
+        if i != 0:
+            for file in fileLocal:
+                if file['nombre'] == campos[1].strip('\n'):
+                    boo = True
+                    file['operacion'] = 'add'
+                    file['timestamp'] = campos[0].strip('\n')
+            if not boo:
+                fileLocal.append({'nombre':campos[1].strip('\n'),
+                   'operacion':'add',
+                   'timestamp':campos[0].strip('\n'),
+                   'from':miip})
+        i += 1
+#fin monitorear
 
 # ############################
 # intenta conectarse con todos los posiubles ips
@@ -192,6 +211,8 @@ print 'finalizado posibles: ', posibles
 # levanta servidor como hilo
 server = threading.Thread(target=serv, args=()).start()
 print 'Se levanto el servidor'
+time.sleep(2)
+
 
 # se coneccta como cliente
 for ip in posibles:
@@ -201,28 +222,19 @@ for ip in posibles:
         pass
 print 'finalizo busqueda e intento de conexion '
 
-# hilo que se encarga de monitorear los archivos y carpetas
+time.sleep(2)
 
-def monitorear():
-    #miip = sys.argv[2]
-    fe = os.popen("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'").read()
-    iplocal, fileLocal = leerLog('logNodo.txt')
-    for file in fileLocal:
-        file['operation']='delete'
-        file['timestamp']=time.time()
-    i=0
-    for line in fe.split('\n'):
-        boo = False
-        campos = line.split('|')
-        if i != 0:
-            for file in fileLocal:
-                if file['nombre'] == campos[1].strip('\n'):
-                    boo = True
-                    file['operacion'] = 'add'
-                    file['timestamp'] = campos[0].strip('\n')
-            if not boo:
-                fileLocal.append({'nombre':campos[1].strip('\n'),
-                   'operacion':'add',
-                   'timestamp':campos[0].strip('\n'),
-                   'from':miip})
-        i += 1
+if len(diccIPs.values()) == 1:
+    rnd = random.choice(diccIPs.values())
+    print 'Por enviar a: ',rnd
+    rnd.send('l')
+    rnd.send(100)
+
+
+# hilo que se encarga de monitorear los archivos y carpetas
+while True:
+    monitorear()
+    time.sleep(60)
+
+
+
