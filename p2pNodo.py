@@ -54,7 +54,8 @@ def acciones(conn):
                 enviarFile('logRevision.txt', con)
                 print 'renvio r'
             else:
-                conexion = diccIPs[ipList[0]]  # ala primera ip empieza sync
+                temp=ipList.remove(miip)
+                conexion = diccIPs[temp[0]]  # ala primera ip empieza sync
                 conexion.send('s')
                 time.sleep(1)
                 copiarLogSync('logRevision.txt', 'logSync.txt')
