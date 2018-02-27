@@ -42,6 +42,7 @@ def recibirFile(file, conn):
 
     print('Recibio archivo',file)
     #conn.close()
+    return True
 
 def borrarFile(file, ruta):
     fd = os.system('rm '+ruta+' '+file)

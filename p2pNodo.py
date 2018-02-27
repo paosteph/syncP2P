@@ -40,14 +40,8 @@ def acciones(conn):
                 print 'se envio r con valor'
                 enviarFile('logNodo.txt', rnd)
         elif case == 'r':  # r actualiza el log de revision
-            t=recibirFile('logRevision.txt', conn)
-            while not t:
-                try:
-                    t = recibirFile('logRevision.txt', conn)
-                except:
-                    print 'error recibiendo sync'
+            recibirFile('logRevision.txt', conn)
 
-                    
             actualizaLogRevision('logNodo.txt', 'logRevision.txt', miip)
 
             ipList, fileList = leerLog('logRevision.txt')
@@ -69,7 +63,12 @@ def acciones(conn):
                 actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
         elif case == 's':  # s actualiza la carpta local
-            recibirFile('logSync.txt')
+            t = recibirFile('logSync.txt')
+            while not t:
+                try:
+                    t=recibirFile('logSync.txt')
+                except:
+                    print('error recibiendo sync')
             actualizar()
             ipList, fileList = leerLog('logSync.txt')
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
