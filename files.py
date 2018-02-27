@@ -12,6 +12,7 @@ def enviarFile(file, conn):
             print('Enviado ',repr(l))
             l = f.read(BUFFER_SIZE)
         if not l:
+            conn.send('')
             f.close()
             #conn.close()
             break
@@ -23,8 +24,8 @@ def recibirFile(file, conn):
         print 'file',file,' opened'
         while True:
             data = conn.recv(BUFFER_SIZE)
-            print('data=%s', (data))
-            if not data:
+            print('data: ', (data))
+            if data=='':
                 f.close()
                 print 'file close()'
                 break

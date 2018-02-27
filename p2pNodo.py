@@ -164,14 +164,13 @@ def serv():
     s.close()
 
 def monitorear():
-    #miip = sys.argv[2]
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
     iplocal.append(miip)
     for file in fileLocal:
         file['operation']='delete'
-        file['timestamp']=time.strftime("%H:%M") ##poner bien la hora y resta..OJOOO
+        file['timestamp']=time.strftime("%H:%M")
 
     for i in range(1,len(fe)-1):
         boo = False
