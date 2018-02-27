@@ -164,7 +164,8 @@ def serv():
 
 def monitorear():
     #miip = sys.argv[2]
-    fe = os.popen("ls -l'"+ruta +" '|awk '{ print $8 '|' $9 }'").read()
+    fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
+    print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
     for file in fileLocal:
         file['operation']='delete'
