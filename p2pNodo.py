@@ -40,7 +40,14 @@ def acciones(conn):
                 print 'se envio r con valor'
                 enviarFile('logNodo.txt', rnd)
         elif case == 'r':  # r actualiza el log de revision
-            recibirFile('logRevision.txt', conn)
+            t=recibirFile('logRevision.txt', conn)
+            while not t:
+                try:
+                    t = recibirFile('logRevision.txt', conn)
+                except:
+                    print 'error recibiendo sync'
+
+                    
             actualizaLogRevision('logNodo.txt', 'logRevision.txt', miip)
 
             ipList, fileList = leerLog('logRevision.txt')
