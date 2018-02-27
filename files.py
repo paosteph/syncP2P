@@ -24,6 +24,7 @@ def recibirFile(file, conn):
         print 'file',file,' opened'
         while True:
             data = conn.recv(BUFFER_SIZE)
+            print 'Tipo de dato de data: ',type(data)
             print('data: ', (data))
             if data=='12345':
                 f.close()
