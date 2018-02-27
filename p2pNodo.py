@@ -35,7 +35,7 @@ def acciones(conn):
             else:
                 conn.send('r')  # inicia sync
                 print 'se envio r con valor'
-                enviarFile('logRevision.txt', rnd)
+                enviarFile('logNodo.txt', rnd)
         elif case == 'r':  # r actualiza el log de revision
             recibirFile('logRevision.txt', conn)
             actualizaLogRevision('logNodo .txt', 'logRevision.txt', miip)
@@ -168,6 +168,7 @@ def monitorear():
     fe = os.popen("ls -l "+ruta +" |awk '{ print $8 \"|\" $9 }'").read()
     print 'monitoreando', fe
     iplocal, fileLocal = leerLog('logNodo.txt')
+    iplocal.append(miip)
     for file in fileLocal:
         file['operation']='delete'
         file['timestamp']=time.strftime("%H:%M") ##poner bien la hora y resta..OJOOO
