@@ -73,11 +73,14 @@ def acciones(conn):
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
 
             if len(nodosNoVisitados) > 0:
+
                 con = diccIPs[nodosNoVisitados[0]]
                 con.send('s')
                 time.sleep(3)
                 enviarFile('logSync.txt', con)
                 # reinicio el tiempo de sync
+            else:
+                print 'fin sincronizar nodos'
                 conn.send('l')
                 conn.send('100')
                 print 'reinicio conteo regresivo'
