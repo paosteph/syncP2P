@@ -40,14 +40,8 @@ def acciones(conn):
                 print 'se envio r con valor'
                 enviarFile('logNodo.txt', rnd)
         elif case == 'r':  # r actualiza el log de revision
-            t=recibirFile('logRevision.txt', conn)
-            while not t:
-                try:
-                    t = recibirFile('logRevision.txt', conn)
-                except:
-                    print 'error recibiendo sync'
+            recibirFile('logRevision.txt', conn)
 
-                    
             actualizaLogRevision('logNodo.txt', 'logRevision.txt', miip)
 
             ipList, fileList = leerLog('logRevision.txt')
@@ -60,7 +54,9 @@ def acciones(conn):
                 enviarFile('logRevision.txt', con)
                 print 'renvio r'
             else:
-                conexion = diccIPs[ipList[0]]  # ala primera ip empieza sync
+                temp=ipList
+                temp.remove(miip)
+                conexion = diccIPs[temp[0]]  # ala primera ip empieza sync
                 conexion.send('s')
                 time.sleep(1)
                 copiarLogSync('logRevision.txt', 'logSync.txt')
@@ -69,16 +65,23 @@ def acciones(conn):
                 actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
         elif case == 's':  # s actualiza la carpta local
-            recibirFile('logSync.txt')
+
+            recibirFile('logSync.txt',conn)
+
             actualizar()
             ipList, fileList = leerLog('logSync.txt')
+            ipList.append(miip)# aniado ip nood actual
             nodosNoVisitados = compararDirecciones(ipList)  # compara cada item en cada lista
 
             if len(nodosNoVisitados) > 0:
+
                 con = diccIPs[nodosNoVisitados[0]]
                 con.send('s')
+                time.sleep(3)
                 enviarFile('logSync.txt', con)
                 # reinicio el tiempo de sync
+            else:
+                print 'fin sincronizar nodos'
                 conn.send('l')
                 conn.send('100')
                 print 'reinicio conteo regresivo'
