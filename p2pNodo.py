@@ -239,7 +239,7 @@ for ip in posibles:
         pass
 print 'finalizo busqueda e intento de conexion '
 
-time.sleep(2)
+time.sleep(4)
 
 if len(diccIPs.values()) == 1:
     rnd = random.choice(diccIPs.values())
