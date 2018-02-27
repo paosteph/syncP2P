@@ -66,9 +66,7 @@ def acciones(conn):
 
         elif case == 's':  # s actualiza la carpta local
 
-            while True:
-                if recibirFile('logSync.txt'):
-                    break
+            recibirFile('logSync.txt',conn)
 
             actualizar()
             ipList, fileList = leerLog('logSync.txt')
@@ -77,6 +75,7 @@ def acciones(conn):
             if len(nodosNoVisitados) > 0:
                 con = diccIPs[nodosNoVisitados[0]]
                 con.send('s')
+                time.sleep(3)
                 enviarFile('logSync.txt', con)
                 # reinicio el tiempo de sync
                 conn.send('l')
