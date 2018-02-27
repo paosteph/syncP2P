@@ -114,11 +114,11 @@ def actualizar():
                     if file['operacion'] == 'delete':
                         borrarFile(file['nombre'], ruta)
                     else:
-                        solicitarFile(ruta+file['nombre'], file['from'])  #
+                        solicitarFile(ruta+'/'+file['nombre'], file['from'])  #
         # solicito un archivo si no existia localmente
         if boo == False:
             if file['operacion'] == 'add':
-                solicitarFile(ruta+file['nombre'], diccIPs[file['from']])  #
+                solicitarFile(ruta+'/'+file['nombre'], diccIPs[file['from']])  #
 
     # el log local tiene ahora el contenido del syncronizado
     copiarLogSync('logSync.txt', 'logNodo.txt')
