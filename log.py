@@ -13,7 +13,7 @@ def creaLog(listaIP,listaArchivos):
             line=str(file['nombre'])+'|'+str(file['operacion'])+'|'+str(file['timestamp'])+'|'+str(file['from'])
             archivoLog.write('\n')
             archivoLog.write(line)
-            
+
 
 def leerLog(archivoLog):
     ipList=[]
