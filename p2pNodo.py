@@ -13,16 +13,14 @@ ruta = sys.argv[1]
 miip = sys.argv[2]
 
 def lanzador(conn):#controla desconexiones de un nodo
-    #try:
-    acciones(conn)
-
-    """
+    try:
+        acciones(conn)
     except:
         conn.close
         for k in diccIPs.keys():
             if diccIPs[k]==conn:
                 del(diccIPs[k])
-    """
+
 
 def acciones(conn):
     while True:
