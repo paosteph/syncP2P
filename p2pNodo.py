@@ -68,7 +68,7 @@ def acciones(conn):
                 enviarFile('logSync.txt', con)
                 # reinicio el tiempo de sync
                 conn.send('l')
-                conn.send(100)
+                conn.send('100')
                 print 'reinicio conteo regresivo'
 
         else:  # f envia el archivo
@@ -230,7 +230,7 @@ if len(diccIPs.values()) == 1:
     rnd = random.choice(diccIPs.values())
     print 'Por enviar a: ',rnd
     rnd.send('l')
-    rnd.send(100)
+    rnd.send('100')
 
 
 # hilo que se encarga de monitorear los archivos y carpetas
