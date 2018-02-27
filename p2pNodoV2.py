@@ -8,7 +8,8 @@ import threading
 from files import *
 from log import *
 
-diccIPs = {}
+diccIPsCli = {}
+diccIPsServ = {}
 ruta = sys.argv[1]
 miip = sys.argv[2]
 
@@ -18,9 +19,10 @@ def lanzador(conn):
         acciones(conn)
     except:
         conn.close
-        for k in diccIPs.keys():
-            if diccIPs[k]==conn:
-                del(diccIPs[k])
+        for k in diccIPsCli.keys():
+            if diccIPsCli[k]==conn:
+                del (diccIPsCli[k])
+                del (diccIPsServ[k])
 
 #todas las posibles soluciones a una peticion de un nodo
 def acciones(conn):
@@ -30,7 +32,7 @@ def acciones(conn):
         if case == 'l':  # l define quien inicia la sync
             msg = conn.recv(1024)  # se queda bloqueado escuchando
             if int(msg) != 0:
-                temp=diccIPs.values()
+                temp=diccIPsCli.values()
                 temp.remove(None)
                 rnd = random.choice(temp)
                 rnd.send('l')
@@ -58,13 +60,12 @@ def acciones(conn):
                 temp=ipList
                 temp.remove(miip)
                 conexion = diccIPs[temp[0]]  # ala primera ip empieza sync
-                actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
                 conexion.send('s')
                 time.sleep(1)
                 copiarLogSync('logRevision.txt', 'logSync.txt')
                 print 'envio s y logSync'
                 enviarFile('logSync.txt', conexion)
-
+                actualizar()  # ya tienes log, lo abriste y ejecutas operaciones -> actualizacion
 
         elif case == 's':  # s actualiza la carpta local
 
@@ -144,9 +145,9 @@ def conectar(ip):
     s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1) #reusar socket
     s.connect((HOST, PORT))
     print 'conectado como cliente al punto ' + ip
-    diccIPs[ip] = s
+    diccIPsCli[ip] = s
     #time.sleep(1)
-    print 'todas las conexiones: ', diccIPs.values()
+    print 'todas las conexiones cli: ', diccIPsCli.values()
     lanzador(s) #inicia
 
 #conecto como servidor
@@ -186,10 +187,12 @@ def serv():
 
         start_new_thread(clientthread, (conn,)) #
 
+        diccIPsServ[addr[0]] = conn
         #time.sleep(1)
-        global diccIPs
-        if not addr in diccIPs.keys():
-            diccIPs[addr[0]]=conn
+        global diccIPsCli
+        if not addr[0] in diccIPsCli.keys():
+            conectar(addr[0])
+
     s.close()
 
 #chequea archivos en la carpeta compartida
@@ -283,13 +286,14 @@ print 'finalizo busqueda e intento de conexion '
 time.sleep(4)
 
 # si es el segundo equipo conectarse en la red inicia sincronizacion
-if len(diccIPs.values()) == 1:
-    rnd = random.choice(diccIPs.values())
+if len(diccIPsCli.values()) == 1:
+    rnd = random.choice(diccIPsCli.values())
     print 'Por enviar a: ',rnd
     rnd.send('l')
     rnd.send('30')
 
-diccIPs[miip]=None #doy direccion local vacia
+diccIPsCli[miip]=None #doy direccion local vacia
+diccIPsServ[miip]=None
 
 
 # hilo que se encarga de monitorear los archivos y carpetas
