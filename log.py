@@ -1,10 +1,12 @@
 import os
 
-def creaLog(listaIP,listaArchivos):
-    with open('logNodo.txt','w') as archivoLog:
+def creaLog(listaIP,listaArchivos,nombre):
+    with open(nombre,'w') as archivoLog:
         # escribo IP
+        print 'listaIO ', listaIP
         for ip in listaIP:
-            archivoLog.write(ip+'\n')
+            print 'ip ',ip
+            archivoLog.write(ip.strip('\n')+'\n')
 
         # escribo Archivos
         archivoLog.write('Files:')
@@ -58,7 +60,7 @@ def actualizaLogRevision(logA,logR,miip):
     # aumento ip visitada
     ipR.append(miip)
 
-    creaLog(ipR,fileListR)
+    creaLog(ipR,fileListR,'logRevision.txt')
 
 def copiarLogSync(fileA, fileB):
     os.system('cp '+fileA+' '+ fileB)
